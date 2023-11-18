@@ -6,6 +6,8 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
+import CartScreen from './screens/CartScreen'
+import ProfileScreen from './screens/ProfileScreen'
 
 
 const AuthStack = createStackNavigator();
@@ -28,7 +30,7 @@ const MainNavigator = () => (
 );
 
 const App = () => {
-    const userIsAuthenticated = false;
+    const userIsAuthenticated = true;
 
     return ( 
         <NavigationContainer> 

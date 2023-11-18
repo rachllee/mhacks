@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { auth, db, storage } from '../../../mhacks/firebaseConfig';
+import { auth, db, storage } from '../firebaseConfig';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -68,7 +68,7 @@ const ProfileScreen = () => {
         <View style={styles.container}>
             <TouchableOpacity onPress={handleSelectProfilePic}>
                 <Image
-                    source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/default-profile-pic.jpg')} 
+                    source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/favicon.png')} 
                     style={styles.profilePic}
                 />
             </TouchableOpacity>
