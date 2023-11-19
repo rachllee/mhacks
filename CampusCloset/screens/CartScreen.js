@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { auth, db } from '../firebaseConfig';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { useFocusEffect } from '@react-navigation/native';
 
 const CustomButton = ({ title, onPress, color }) => {
     return (
@@ -29,21 +28,19 @@ const CustomButton2 = ({ title, onPress, color }) => {
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);
 
-    const fetchCartItems = async () => {
-        try {
-            const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/cart`));
-            const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setCartItems(items);
-        } catch (error) {
-            console.error("Error fetching cart items:", error);
-        }
-    };
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/cart`));
+                const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setCartItems(items);
+            } catch (error) {
+                console.error("Error fetching cart items:", error);
+            }
+        };
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchCartItems();
-        }, [])
-    );
+        fetchCartItems();
+    }, []);
 
     const handleRemoveItem = async (itemId) => {
         try {
