@@ -6,8 +6,13 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
+<<<<<<< HEAD
 import CartScreen from './screens/CartScreen';
 import ProfileScreen from './screens/ProfileScreen';
+=======
+import CartScreen from './screens/CartScreen'
+import ProfileScreen from './screens/ProfileScreen'
+>>>>>>> 25b58329ab608f22c5ff2647afcd5d54934c2fcb
 
 
 const AuthStack = createStackNavigator();
@@ -33,7 +38,11 @@ const MainNavigator = () => (
 );
 
 const App = () => {
+<<<<<<< HEAD
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+=======
+    const userIsAuthenticated = true;
+>>>>>>> 25b58329ab608f22c5ff2647afcd5d54934c2fcb
 
     return ( 
         <NavigationContainer> 

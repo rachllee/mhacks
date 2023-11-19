@@ -68,7 +68,11 @@ const ProfileScreen = () => {
         <View style={styles.container}>
             <TouchableOpacity onPress={handleSelectProfilePic}>
                 <Image
+<<<<<<< HEAD
                     source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/icon.png')} 
+=======
+                    source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/favicon.png')} 
+>>>>>>> 25b58329ab608f22c5ff2647afcd5d54934c2fcb
                     style={styles.profilePic}
                 />
             </TouchableOpacity>

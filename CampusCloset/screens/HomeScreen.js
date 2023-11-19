@@ -9,4 +9,8 @@ const HomeScreen = () => {
     )
 }
 
+<<<<<<< HEAD
 export default HomeScreen;
+=======
+export default HomeScreen
+>>>>>>> 25b58329ab608f22c5ff2647afcd5d54934c2fcb
