@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, FlatList, Modal, Button} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import { addDoc, collection } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [filters, setFilters] = useState({
         university: null,
@@ -11,16 +13,16 @@ const HomeScreen = ({ navigation }) => {
     });
     
     const data = [
-        { id: '1', image: require('../assets/image1.jpg'), caption: 'umich tube top', price: '18', university: 'Michigan Wolverines', type: 'Tops', date: '11/16/2023', size: 'S', description: 'Blue tube top with michgian text'},
-        { id: '2', image: require('../assets/image2.jpg'), caption: 'michigan long sleeve', price: '22', university: 'Michigan Wolverines', type: 'Tops', date: '11/07/2023', size: 'M', description: 'Grey long sleeve' },
-        { id: '3', image: require('../assets/image3.jpg'), caption: 'mich leggings', price: '30', university: 'Michigan Wolverines', type: 'Bottoms', date: '11/05/2023', size: 'XS', description: 'Michigan print leggings'},
-        { id: '4', image: require('../assets/image4.jpg'), caption: 'blue michigan skirt', price: '24', university: 'Michigan Wolverines', type: 'Bottoms', date: '11/04/2023', size: 'L', description: 'Blue michigan tennis skirt with border'},
-        { id: '5', image: require('../assets/image5.jpg'), caption: 'mich state top', price: '12', university: 'Michigan State Spartans', type: 'Tops', date: '11/02/2023', size: 'S', description: 'Green cropped mich state tee'},
-        { id: '6', image: require('../assets/image6.jpg'), caption: 'one shoulder top', price: '28', university: 'American University', type: 'Tops', date: '11/01/2023', size: 'XS', description: 'white one shoulder american university top'},
-        { id: '7', image: require('../assets/image7.jpeg'), caption: 'penn state tee', price: '15', university: 'Penn State', type: 'Tops', date: '10/24/2023', size: 'M', description: 'Mouth blue penn state tee'},
-        { id: '8', image: require('../assets/image8.jpg'), caption: 'crewneck georgia', price: '32', university: 'Georgia Bulldogs', type: 'Tops', date: '10/23/2023', size: 'L', description: 'Grey Georgia Bulldog hoodie, new'},
-        { id: '9', image: require('../assets/image9.jpg'), caption: 'mich state leggings', price: '30', university: 'Michigan State Spartans', type: 'Bottoms', date: '10/14/2023', size: 'M', description: 'Michigan state print leggings'},
-        { id: '10', image: require('../assets/image10.jpg'), caption: 'rutgers split tee', price: '11', university: 'Rutgers', type: 'Tops', date: '10/14/2023', size: 'L', description: 'Half red half black Rutgers tee'},
+        { id: '1', image: require('../assets/image1.jpg'), name: 'umich tube top', price: '18', university: 'Michigan Wolverines', type: 'Tops', date: '11/16/2023', size: 'S', description: 'Blue tube top with michgian text'},
+        { id: '2', image: require('../assets/image2.jpg'), name: 'michigan long sleeve', price: '22', university: 'Michigan Wolverines', type: 'Tops', date: '11/07/2023', size: 'M', description: 'Grey long sleeve' },
+        { id: '3', image: require('../assets/image3.jpg'), name: 'mich leggings', price: '30', university: 'Michigan Wolverines', type: 'Bottoms', date: '11/05/2023', size: 'XS', description: 'Michigan print leggings'},
+        { id: '4', image: require('../assets/image4.jpg'), name: 'blue michigan skirt', price: '24', university: 'Michigan Wolverines', type: 'Bottoms', date: '11/04/2023', size: 'L', description: 'Blue michigan tennis skirt with border'},
+        { id: '5', image: require('../assets/image5.jpg'), name: 'mich state top', price: '12', university: 'Michigan State Spartans', type: 'Tops', date: '11/02/2023', size: 'S', description: 'Green cropped mich state tee'},
+        { id: '6', image: require('../assets/image6.jpg'), name: 'one shoulder top', price: '28', university: 'American University', type: 'Tops', date: '11/01/2023', size: 'XS', description: 'white one shoulder american university top'},
+        { id: '7', image: require('../assets/image7.jpeg'), name: 'penn state tee', price: '15', university: 'Penn State', type: 'Tops', date: '10/24/2023', size: 'M', description: 'Mouth blue penn state tee'},
+        { id: '8', image: require('../assets/image8.jpg'), name: 'crewneck georgia', price: '32', university: 'Georgia Bulldogs', type: 'Tops', date: '10/23/2023', size: 'L', description: 'Grey Georgia Bulldog hoodie, new'},
+        { id: '9', image: require('../assets/image9.jpg'), name: 'mich state leggings', price: '30', university: 'Michigan State Spartans', type: 'Bottoms', date: '10/14/2023', size: 'M', description: 'Michigan state print leggings'},
+        { id: '10', image: require('../assets/image10.jpg'), name: 'rutgers split tee', price: '11', university: 'Rutgers', type: 'Tops', date: '10/14/2023', size: 'L', description: 'Half red half black Rutgers tee'},
         // Add more images with captions as needed
     ];
 
@@ -32,8 +34,23 @@ const HomeScreen = ({ navigation }) => {
         setSelectedImage(null);
     };
 
-    const addToCart = (item) => {
-        console.log("Adding items", item)
+    const addToCart = async (item) => {
+        try {
+            // Create a new object with the necessary properties for the cart
+            const cartItem = {
+                name: item.name,
+                price: item.price,  // Make sure to add the correct property
+                // Add other properties as needed
+            };
+    
+            // Add the selected item to the Firebase database under the user's cart collection
+            const cartRef = collection(db, `users/${auth.currentUser.uid}/cart`);
+            await addDoc(cartRef, cartItem);
+    
+            console.log("Item added to cart:", cartItem);
+        } catch (error) {
+            console.error("Error adding item to cart:", error);
+        }
     };
 
     const filteredData = data.filter(item => {
@@ -50,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => handleImagePress(item)}>
             <View style={styles.imageContainer}>
                 <Image source={item.image} style={styles.image} />
-                <Text style={styles.caption}>{item.caption}</Text>
+                <Text style={styles.name}>{item.name}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -112,14 +129,14 @@ const HomeScreen = ({ navigation }) => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                     <Image source={selectedImage?.image} style={styles.modalImage} />
-                    <Text style={styles.modalCaption}>{selectedImage?.caption}</Text>
+                    <Text style={styles.modalName}>{selectedImage?.name}</Text>
                     <Text style={styles.modalPrice}>${selectedImage?.price}</Text>
                     <Text style={styles.modaluniversity}>{selectedImage?.university}</Text>
                     <Text style={styles.modaltype}>{selectedImage?.type}</Text>
                     <Text style={styles.modaldate}>{selectedImage?.date}</Text>
                     <Text style={styles.modalsize}>{selectedImage?.size}</Text>
                     <Text style={styles.modaldescription}>{selectedImage?.description}</Text>
-                    <Button title="Add to Cart" onPress={() => addToCart(selectedImage, navigation)} />
+                    <Button title="Add to Cart" onPress={() => addToCart(selectedImage)} />
                     <Button title="Close" onPress={closeModal} />
                     </View>
                 </View>
