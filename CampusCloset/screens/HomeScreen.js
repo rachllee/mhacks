@@ -1,14 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, FlatList, Modal, Button} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import { doc, getDoc, updateDoc, getDocs, collection } from "firebase/firestore";
+import { auth, db, storage } from '../firebaseConfig';
+import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
     const [selectedImage, setSelectedImage] = useState(null);
+    const[firebaseData, setFirebaseData] = useState([]);
     const [filters, setFilters] = useState({
         university: null,
         type: null,
         size: null,
     });
+
+
+
+    const defaultImage = require('../assets/default.jpg');
+
+    const[dynamicData, setDynamicData] = useState([]);
+
+
+    const fetchData = async () => {
+        const itemsCollection = collection(db, 'items');
+        try {
+            const querySnapshot = await getDocs(itemsCollection);
+            const items = [];
+            querySnapshot.forEach((doc) => {
+                items.push(doc.data());
+            });
+            setDynamicData(items);
+        } catch (error) {
+            console.error('error fetching data from irebase')
+        }
+        
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [])
+    );
+          
+ 
+
+    const dynamicDataFromDatabase = dynamicData.map(item => ({
+        id: item.id,
+        image: defaultImage,
+        caption: item.name,
+        price: item.price,
+        university: item.university,
+        type: item.tags[0],
+        date: '11/19/2023',
+        size: item.size,
+        description: item.description,
+    }))
     
     const data = [
         { id: '1', image: require('../assets/image1.jpg'), caption: 'umich tube top', price: '18', university: 'Michigan Wolverines', type: 'Tops', date: '11/16/2023', size: 'S', description: 'Blue tube top with michgian text'},
@@ -24,6 +70,8 @@ const HomeScreen = ({ navigation }) => {
         // Add more images with captions as needed
     ];
 
+    const combinedData = [...data, ...dynamicDataFromDatabase];
+
     const handleImagePress = (item) => {
         setSelectedImage(item);
     };
@@ -36,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
         console.log("Adding items", item)
     };
 
-    const filteredData = data.filter(item => {
+    const filteredData = combinedData.filter(item => {
         return (
             (!filters.university || item.university === filters.university) &&
             (!filters.type || item.type === filters.type) &&

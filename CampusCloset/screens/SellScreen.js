@@ -45,7 +45,7 @@ const SellScreen = ({ navigation }) => {
         await updateDoc(userDocRef, {
           itemsListed: arrayUnion(newItem.id)
         });
-        navigation.goBack();
+        navigation.navigate('HomeScreen');
     } else {
       console.error("Error adding item");
     }
