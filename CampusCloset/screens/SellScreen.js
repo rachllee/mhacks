@@ -170,6 +170,8 @@ const SellScreen = ({ navigation }) => {
         <Switch
           value={used}
           onValueChange={(value) => setUsed(value)}
+          trackColor={{ false: "#bba1d2", true: "#2c0e69" }} // Dark purple when on
+          thumbColor={used ? "#efeaff" : "#efeaff"}
         />
 
         <Text style={styles.info}>Description:</Text>
