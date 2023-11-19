@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import { auth, db, storage } from '../firebaseConfig';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -11,8 +11,11 @@ const ProfileScreen = () => {
         email: '',
         profilePic: ''
     });
-    const [itemsSold, setItemsSold] = useState([]);
     const [itemsBought, setItemsBought] = useState([]);
+    const [itemsSold, setItemsSold] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const [tempName, setTempName] = useState('');
+    const [tempEmail, setTempEmail] = useState('');
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -35,6 +38,8 @@ const ProfileScreen = () => {
                     const boughtItems = boughtItemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     setItemsBought(boughtItems);
 
+                    //setItemsBought(data.itemsBought || []);
+                    //setItemsSold(data.itemsSold || []);
                 } else {
                     console.log("No such document!");
                 }
@@ -44,6 +49,25 @@ const ProfileScreen = () => {
         };
         getUserInfo();
     }, []);
+
+    const handleEdit = () => {
+        setTempName(userInfo.name);
+        setTempEmail(userInfo.email);
+        setEditMode(true);
+    };
+
+    const handleSave = async () => {
+        try {
+            await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                name: tempName,
+                email: tempEmail
+            });
+            setUserInfo({ ...userInfo, name: tempName, email: tempEmail });
+            setEditMode(false);
+        } catch (error) {
+            console.error("Error updating user info:", error);
+        }
+    };
     
     const renderItem = (items) => {
         if (!Array.isArray(items) || items.length === 0) {
@@ -86,19 +110,44 @@ const ProfileScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>{userInfo.name}</Text>
-            <TouchableOpacity onPress={handleSelectProfilePic}>
-                <Image
-                    source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/default-profile-pic.png')} 
-
-                    style={styles.profilePic}
-                />
+            <TouchableOpacity onPress={handleEdit} style={styles.button}>
+                <Text>Edit</Text>
             </TouchableOpacity>
-            <Text style={styles.email}>Email: {userInfo.email}</Text>
-            <Text style={styles.info}>Items Bought:</Text>
-            {renderItem(itemsBought)}
-            <Text style={styles.info}>Items Sold:</Text>
-            {renderItem(itemsSold)}
+    
+            {editMode ? (
+                <>
+                    <TextInput
+                        style={styles.input}
+                        value={tempName}
+                        onChangeText={setTempName}
+                        placeholder="Name"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        value={tempEmail}
+                        onChangeText={setTempEmail}
+                        placeholder="Email"
+                    />
+                    <TouchableOpacity onPress={handleSave} style={styles.button}>
+                        <Text>Save</Text>
+                    </TouchableOpacity>
+                </>
+            ) : (
+                <>
+                    <Text style={styles.header}>{userInfo.name}</Text>
+                    <TouchableOpacity onPress={handleSelectProfilePic}>
+                        <Image
+                            source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/default-profile-pic.png')} 
+                            style={styles.profilePic}
+                        />
+                    </TouchableOpacity>
+                    <Text style={styles.email}>Email: {userInfo.email}</Text>
+                    <Text style={styles.info}>Items Bought:</Text>
+                    {renderItem(itemsBought)}
+                    <Text style={styles.info}>Items Sold:</Text>
+                    {renderItem(itemsSold)}
+                </>
+            )}
         </View>
     );
 };
@@ -109,6 +158,20 @@ const styles = StyleSheet.create({
         justifyContent: 'top',
         alignItems: 'center',
         padding: 20,
+    },
+    input: {
+        width: '80%',
+        padding: 10,
+        marginVertical: 5,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+    },
+    button: {
+        backgroundColor: '#007bff',
+        padding: 10,
+        margin: 10,
+        borderRadius: 5,
     },
     profilePic: {
         width: 100,

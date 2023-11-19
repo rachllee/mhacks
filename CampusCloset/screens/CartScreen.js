@@ -1,30 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
-
-// mock data
-const itemsMock = [
-    { id: '1', name: 'Tailgate T-Shirt', price: 20, quantity: 1 },
-    { id: '2', name: 'Vintage College Cap', price: 15, quantity: 1 },
-];
+import { auth, db } from '../firebaseConfig';
+import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 const CartScreen = () => {
-    const [cartItems, setCartItems] = useState(itemsMock);
+    const [cartItems, setCartItems] = useState([]);
 
-    const handleRemoveItem = (itemId) => {
-        const updatedCart = cartItems.filter(item => item.id !== itemId);
-        setCartItems(updatedCart);
-        // update backend
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/cart`));
+                const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setCartItems(items);
+            } catch (error) {
+                console.error("Error fetching cart items:", error);
+            }
+        };
+
+        fetchCartItems();
+    }, []);
+
+    const handleRemoveItem = async (itemId) => {
+        try {
+            await deleteDoc(doc(db, `users/${auth.currentUser.uid}/cart`, itemId));
+            const updatedCart = cartItems.filter(item => item.id !== itemId);
+            setCartItems(updatedCart);
+        } catch (error) {
+            console.error("Error removing cart item:", error);
+        }
     };
 
-    const handleQuantityChange = (itemId, newQuantity) => {
-        const updatedCart = cartItems.map(item => {
-            if (item.id === itemId) {
-                return { ...item, quantity: newQuantity };
-            }
-            return item;
-        });
-        setCartItems(updatedCart);
-        // update backend
+    const handleQuantityChange = async (itemId, newQuantity) => {
+        if (newQuantity < 1) return; // Prevent quantity from going below 1
+
+        try {
+            const itemRef = doc(db, `users/${auth.currentUser.uid}/cart`, itemId);
+            await updateDoc(itemRef, { quantity: newQuantity });
+
+            const updatedCart = cartItems.map(item => {
+                if (item.id === itemId) {
+                    return { ...item, quantity: newQuantity };
+                }
+                return item;
+            });
+            setCartItems(updatedCart);
+        } catch (error) {
+            console.error("Error updating cart item:", error);
+        }
     };
 
     const getTotalPrice = () => {
