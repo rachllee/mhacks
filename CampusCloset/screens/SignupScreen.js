@@ -33,6 +33,7 @@ const SignupScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.group}>
             <Text style={styles.header}>New User</Text>
             <TextInput
                 style={styles.input}
@@ -63,6 +64,7 @@ const SignupScreen = ({ navigation }) => {
                 title="Create Account" 
                 onPress={handleCreateAccount}
             />
+            </View>
         </View>
     );
 }
@@ -70,7 +72,7 @@ const SignupScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'top',
         alignItems: 'center',
         padding: 20
     },
@@ -86,6 +88,13 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
     },
+    group: {
+        alignItems: 'center',
+        height: 60,
+        width: 300,
+        position: 'absolute',
+        top: '20%',
+    }
 });
 
 export default SignupScreen
