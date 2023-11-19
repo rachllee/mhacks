@@ -12,9 +12,10 @@ Most of our work was built with React Native. A Firebase database stores account
 
 ## Challenges we ran into
 1. Servers. We ran into trouble in hosting them both locally and on Google Cloud, which resulted in a significant setback for the incorporation of our various API's.
-2. Storing images. Storing user input for images in a database was surprisingly more complicated than expected. We first attempted to use Firebase's built in storage feature, but couldn't find a way to link the image with the rest of the item data. We then attempted to encode the user's image into a Base64, then decode it on the homepage. Unfortunately, the built in method for encoding an image failed to produce a valid encoding. 
+2. Storing images. Storing user input for images in a database was surprisingly more complicated than expected. We first attempted to use Firebase's built in storage feature, but couldn't find a way to link the image with the rest of the item data. We then attempted to encode the user's image into a Base64, then decode it on the homepage. Unfortunately, the built in method for encoding an image failed to produce a valid encoding.
+   
 ## Accomplishments that we're proud of
-Cool frontend & fully functional database.
+Pretty frontend and color schemes, a fully functioning and fully integrated database, ability to list items and add items to cart, individual users and unique logins, and more
 
 ## What we learned
 Mobile is hard
