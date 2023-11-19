@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -11,14 +11,18 @@ import ProfileScreen from './screens/ProfileScreen';
 import SellScreen from './screens/SellScreen';
 
 
+
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const AuthNavigator = () => (
+const AuthNavigator = ({ setIsLoggedIn }) => (
     <AuthStack.Navigator initialRouteName="Welcome">
-        <AuthStack.Screen name="SignupScreen" component={SignupScreen} />
-        <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
         <AuthStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+        <AuthStack.Screen name="SignupScreen" component={SignupScreen} />
+        <AuthStack.Screen 
+            name="LoginScreen" 
+            children={() => <LoginScreen setIsLoggedIn={setIsLoggedIn} />}
+        />
     </AuthStack.Navigator>
 );
 
@@ -32,14 +36,13 @@ const MainNavigator = () => (
 );
 
 const App = () => {
-    const userIsAuthenticated = true;
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     return ( 
         <NavigationContainer> 
-            {userIsAuthenticated ? <MainNavigator /> : <AuthNavigator /> }
+            {isLoggedIn ? <MainNavigator /> : <AuthNavigator setIsLoggedIn={setIsLoggedIn}/> }
         </NavigationContainer>
     );
 };
-
 
 export default App;

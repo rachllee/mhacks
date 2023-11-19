@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
 
 // mock data
-const cartItemsMock = [
+const itemsMock = [
     { id: '1', name: 'Tailgate T-Shirt', price: 20, quantity: 1 },
     { id: '2', name: 'Vintage College Cap', price: 15, quantity: 1 },
 ];
 
 const CartScreen = () => {
-    const [cartItems, setCartItems] = useState(cartItemsMock);
+    const [cartItems, setCartItems] = useState(itemsMock);
 
     const handleRemoveItem = (itemId) => {
         const updatedCart = cartItems.filter(item => item.id !== itemId);
