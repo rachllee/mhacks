@@ -6,8 +6,9 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
-import CartScreen from './screens/CartScreen'
-import ProfileScreen from './screens/ProfileScreen'
+import CartScreen from './screens/CartScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import SellScreen from './screens/SellScreen';
 
 
 const AuthStack = createStackNavigator();
@@ -15,17 +16,18 @@ const Tab = createBottomTabNavigator();
 
 const AuthNavigator = () => (
     <AuthStack.Navigator initialRouteName="Welcome">
-        <AuthStack.Screen name="Signup" component={SignupScreen} />
-        <AuthStack.Screen name="Login" component={LoginScreen} />
-        <AuthStack.Screen name="Welcome" component={WelcomeScreen} />
+        <AuthStack.Screen name="SignupScreen" component={SignupScreen} />
+        <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
+        <AuthStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
     </AuthStack.Navigator>
 );
 
 const MainNavigator = () => (
     <Tab.Navigator> 
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Cart" component={CartScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} /> 
+        <Tab.Screen name="HomeScreen" component={HomeScreen} />
+        <Tab.Screen name="CartScreen" component={CartScreen} />
+        <Tab.Screen name="ProfileScreen" component={ProfileScreen} /> 
+        <Tab.Screen name="SellScreen" component={SellScreen} />
     </Tab.Navigator>
 );
 
