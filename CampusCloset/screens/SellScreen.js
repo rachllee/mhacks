@@ -56,7 +56,18 @@ const SellScreen = ({ navigation }) => {
         await updateDoc(userDocRef, {
           itemsListed: arrayUnion(newItem.id)
         });
-        navigation.goBack();
+        navigation.navigate('HomeScreen');
+
+        setName('');
+            setTags([]);
+            setTagInput('');
+            setImage(null);
+            setPrice(0);
+            setUniversity('');
+            setSelectedSize('');
+            setUsed('');
+            setDescription('');
+            
     } else {
       console.error("Error adding item");
     }
