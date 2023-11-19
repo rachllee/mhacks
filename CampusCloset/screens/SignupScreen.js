@@ -23,7 +23,8 @@ const SignupScreen = ({ navigation }) => {
                 email: email,
                 itemsOrdered: [],
                 itemsSold: [],
-                itemsInCart: []
+                itemsInCart: [],
+                itemsListed: []
             })
             navigation.navigate('LoginScreen');
         } catch (error) {

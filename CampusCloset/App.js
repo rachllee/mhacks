@@ -9,6 +9,8 @@ import HomeScreen from './screens/HomeScreen';
 import CartScreen from './screens/CartScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SellScreen from './screens/SellScreen';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 
 
 
@@ -28,10 +30,38 @@ const AuthNavigator = ({ setIsLoggedIn }) => (
 
 const MainNavigator = () => (
     <Tab.Navigator> 
-        <Tab.Screen name="HomeScreen" component={HomeScreen} />
-        <Tab.Screen name="CartScreen" component={CartScreen} />
-        <Tab.Screen name="ProfileScreen" component={ProfileScreen} /> 
-        <Tab.Screen name="SellScreen" component={SellScreen} />
+        <Tab.Screen name="HomeScreen" component={HomeScreen}
+        options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="home" color={color} size={size} />
+            ),
+        }}
+        />
+        <Tab.Screen name="CartScreen" component={CartScreen} 
+        options={{
+            tabBarLabel: 'Cart',
+            tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="shopping-cart" color={color} size={size} />
+            ),
+        }}
+        />
+        <Tab.Screen name="ProfileScreen" component={ProfileScreen} 
+        options={{
+            tabBarLabel: 'Profile',
+            tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="person" color={color} size={size} />
+            ),
+        }}
+        /> 
+        <Tab.Screen name="SellScreen" component={SellScreen} 
+        options={{
+            tabBarLabel: 'Sell',
+            tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="add-circle" color={color} size={size} />
+            ),
+        }}
+        />
     </Tab.Navigator>
 );
 

@@ -5,24 +5,14 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-const itemsMockBought = [
-    { id: '1', name: 'Tailgate T-Shirt', price: 20, quantity: 1 },
-    { id: '2', name: 'Vintage College Cap', price: 15, quantity: 1 },
-];
-
-const itemsMockSold = [
-    { id: '1', name: 'Tailgate T-Shirt', price: 20, quantity: 1 },
-    { id: '2', name: 'Vintage College Cap', price: 15, quantity: 1 },
-];
-
 const ProfileScreen = () => {
     const [userInfo, setUserInfo] = useState({
-        name: 'Netra',
-        email: 'netraj@netraj.edu',
+        name: '',
+        email: '',
         profilePic: ''
     });
-    const [itemsBought] = useState(itemsMockBought);
-    const [itemsSold] = useState(itemsMockSold);
+    const [itemsSold, setItemsSold] = useState([]);
+    const [itemsBought, setItemsBought] = useState([]);
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -32,10 +22,19 @@ const ProfileScreen = () => {
                     const data = userDoc.data();
                     setUserInfo(prevState => ({
                         ...prevState,
-                        name: userInfo.name,
-                        email: userInfo.email,
-                        profilePic: userInfo.profilePic || '',
+                        name: data.name,
+                        email: data.email,
+                        profilePic: data.profilePic || '',
                     }));
+
+                    const soldItemsSnap = await getDoc(collection(db, "soldItems", userId, "items"));
+                    const soldItems = soldItemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setItemsSold(soldItems);
+
+                    const boughtItemsSnap = await getDoc(collection(db, "boughtItems", userId, "items"));
+                    const boughtItems = boughtItemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setItemsBought(boughtItems);
+
                 } else {
                     console.log("No such document!");
                 }
@@ -43,11 +42,14 @@ const ProfileScreen = () => {
                 console.error("Error fetching user data:", error);
             }
         };
-
         getUserInfo();
     }, []);
     
     const renderItem = (items) => {
+        if (!Array.isArray(items) || items.length === 0) {
+            return <Text>No items.</Text>;
+        }
+
         return items.map(item => (
             <View key={item.id} style={styles.itemContainer}>
                 <Text style={styles.itemInfo}>
@@ -56,7 +58,6 @@ const ProfileScreen = () => {
             </View>
         ));
     };
-    
 
     const handleSelectProfilePic = () => {
         launchImageLibrary({ mediaType: 'photo' }, (response) => {
@@ -93,7 +94,7 @@ const ProfileScreen = () => {
                     style={styles.profilePic}
                 />
             </TouchableOpacity>
-            <Text style={styles.email}>email: {userInfo.email}</Text>
+            <Text style={styles.email}>Email: {userInfo.email}</Text>
             <Text style={styles.info}>Items Bought:</Text>
             {renderItem(itemsBought)}
             <Text style={styles.info}>Items Sold:</Text>

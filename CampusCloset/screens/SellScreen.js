@@ -1,22 +1,54 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image, Platform, Switch, ScrollView, KeyboardAvoidingView } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import 'react-native-get-random-values'
+import { v4 as uuidv4 } from 'uuid';
+import { db, auth } from '../firebaseConfig';
+import { arrayUnion, doc, collection, addDoc, updateDoc } from "firebase/firestore";
 
+const generateUniqueId = () => {
+  return uuidv4();
+};
 
 const SellScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [image, setImage] = useState(null);
+  const [price, setPrice] = useState(0);
+  const [university, setUniversity] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
+  const [used, setUsed] = useState('');
+  const sizes = ['XS', 'S', 'M', 'L', 'XL'];
+  const [itemsListed, setItemsListed] = useState([]);
 
+  const addItemToList = (newItem) => {
+    setItemsListed([...itemsListed, newItem]);
+  };
 
-  const handleSellItem = () => {
-    // Implement logic to handle selling item
-    // You can use the state variables (name, description, tags) to send data to your backend
-
-    // For now, just navigate back after handling
-    navigation.goBack();
+  const handleSellItem = async () => {
+    if (auth.currentUser) {
+        const newItem = {
+          name: name,
+          id: generateUniqueId(),
+          price: price, 
+          university: university,
+          size: selectedSize,
+          description: description,
+          used: used,
+          tags: tags
+        }
+        await addDoc(collection(db, "items"), newItem);
+        addItemToList(newItem);
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(userDocRef, {
+          itemsListed: arrayUnion(newItem.id)
+        });
+        navigation.goBack();
+    } else {
+      console.error("Error adding item");
+    }
   };
 
   const addTag = () => {
@@ -29,40 +61,41 @@ const SellScreen = ({ navigation }) => {
   const removeTag = (tagToRemove) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   }
-
-  const handleSelectImage = () => {
-    const options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
   
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        // Set the selected image URI to the state
-        setSelectedImage({ uri: response.uri });
-      }
+  const pickImage = async () => {
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
   };
   
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={100}
+      style={styles.container}
+    >
+    <ScrollView>
+        
+
     <View style={styles.container}>
-        <TouchableOpacity onPress={handleSelectImage}>
-            <View style={styles.square}>
-            {selectedImage ? (
-                <Image source={selectedImage} style={styles.image} />
-            ) : ( 
-                <Text>Select Image</Text>
-            )}
-            </View>
-      </TouchableOpacity>
+
+    <TouchableOpacity onPress={pickImage}>
+      <View style={styles.square}>
+        {image && <Image source={{ uri: image }} style={styles.square} />}
+        {!image && <Text>Select Image</Text>}
+      </View>
+    </TouchableOpacity>
 
       <View style={styles.textFieldsContainer}>
         <Text>Name:</Text>
@@ -94,6 +127,39 @@ const SellScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.descriptionContainer}>
+        <Text>Price:</Text>
+        <TextInput
+          style={styles.textField}
+          value={price}
+          onChangeText={(text) => setPrice(parseFloat(text))}
+          keyboardType='numeric'
+        />
+
+        <Text>University:</Text>
+        <TextInput
+          style={styles.textField}
+          value={university}
+          onChangeText={(text) => setUniversity(text)}
+        />
+
+        <View style={styles.sizeContainer}>
+            {sizes.map(size => (
+                <TouchableOpacity
+                    key={size}
+                    style={[styles.sizeOption, selectedSize === size && styles.selectedSizeOption]}
+                    onPress={() => setSelectedSize(size)}
+                >
+                    <Text style={styles.sizeText}>{size}</Text>
+                </TouchableOpacity>
+            ))}
+        </View>
+        
+        <Text>Used:</Text>
+        <Switch
+          value={used}
+          onValueChange={(value) => setUsed(value)}
+        />
+
         <Text>Description:</Text>
         <TextInput
           style={[styles.textField, { height: 100 }]}
@@ -103,8 +169,11 @@ const SellScreen = ({ navigation }) => {
         />
       </View>
 
-      <Button title="Sell Item" onPress={handleSellItem} />
+      <Button title="List Item" onPress={handleSellItem} />
     </View>
+
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -115,11 +184,12 @@ const styles = StyleSheet.create({
   square: {
     width: 110,
     height: 110,
-    backgroundColor: 'blue', // Change the color as needed
-    position: 'absolute',
-    top: 40,
+    top: 15,
     left: 0,
-    marginLeft: 20,
+    backgroundColor: 'lightgray',
+    marginLeft: 0,
+    position: 'absolute',
+    justifyContent: 'center',
   },
   textFieldsContainer: {
     marginLeft: 130, // Adjust the margin as needed
@@ -155,7 +225,48 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     margin: 5,
-  }
+  },
+  optionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
+  option: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 5,
+  },
+  selectedOption: {
+    backgroundColor: '#blue',
+  },
+  optionText: {
+    fontSize: 16,
+  },
+  image: {
+    width: 110,
+    height: 110,
+  },
+  sizeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sizeOption: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  selectedSizeOption: {
+    backgroundColor: '#007bff',
+    borderColor: '#007bff',
+  },
+  sizeText: {
+    color: 'black',
+    fontSize: 16,
+  },
 });
 
 export default SellScreen;
