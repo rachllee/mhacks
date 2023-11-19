@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { auth, db } from '../firebaseConfig';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { useFocusEffect } from '@react-navigation/native';
 
 const CustomButton = ({ title, onPress, color }) => {
     return (
@@ -14,13 +15,13 @@ const CustomButton = ({ title, onPress, color }) => {
     );
 };
 
-const CustomButton2 = ({ title, onPress, color }) => {
+const CustomButton2 = ({ onPress }) => {
     return (
         <TouchableOpacity 
             onPress={onPress} 
-            style={[styles.removeItemButton]}
+            style={styles.removeItemButtonContainer}
         >
-            <Text style={styles.removeItemButton}>{title}</Text>
+            <Text style={styles.removeItemButtonText}>Remove</Text>
         </TouchableOpacity>
     );
 };
@@ -28,19 +29,21 @@ const CustomButton2 = ({ title, onPress, color }) => {
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);
 
-    useEffect(() => {
-        const fetchCartItems = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/cart`));
-                const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setCartItems(items);
-            } catch (error) {
-                console.error("Error fetching cart items:", error);
-            }
-        };
-
-        fetchCartItems();
-    }, []);
+    const fetchCartItems = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/cart`));
+            const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setCartItems(items);
+        } catch (error) {
+            console.error("Error fetching cart items:", error);
+        }
+    };
+        
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchCartItems();
+        }, [])
+    );
 
     const handleRemoveItem = async (itemId) => {
         try {
@@ -60,11 +63,9 @@ const CartScreen = () => {
         <View style={styles.itemContainer}>
             <Text style={styles.itemName}>{item.name}</Text>
             <Text style={styles.itemPrice}>${item.price}</Text>
-            <CustomButton 
-                    title="Remove" 
-                    onPress={handleRemoveItem(item.id)}
-                    color="#2c0e69"
-                />
+            <CustomButton2 
+                onPress={() => handleRemoveItem(item.id)}
+            />
         </View>
     );
 
@@ -111,10 +112,16 @@ const styles = StyleSheet.create({
         fontFamily: 'AvenirNext-Bold',
         color: '#2c0e69'
     },
-    removeItemButton: {
-        fontSize: 16,
+    removeItemButtonContainer: {
+        padding: 8,
+        borderRadius: 5,
+        justifyContent: 'center',
+        width: 80, // Smaller width for the button
+    },
+    removeItemButtonText: {
         color: 'red',
-        width: '40%'
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold',
     },
     totalPrice: {
         fontSize: 20,
