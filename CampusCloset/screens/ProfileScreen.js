@@ -71,12 +71,14 @@ const ProfileScreen = () => {
     
     const renderItem = (items) => {
         if (!Array.isArray(items) || items.length === 0) {
-            return <Text>No items.</Text>;
+            return <Text style={styles.itemContainer}>
+                No items
+            </Text>;
         }
 
         return items.map(item => (
             <View key={item.id} style={styles.itemContainer}>
-                <Text style={styles.itemInfo}>
+                <Text style={styles.itemContainer}>
                     {item.name} ~ Price: ${item.price} ~ Quantity: {item.quantity}
                 </Text>
             </View>
@@ -111,29 +113,35 @@ const ProfileScreen = () => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handleEdit} style={styles.button}>
-                <Text>Edit</Text>
+                <Text style={styles.edit}>
+                    edit
+                </Text>
             </TouchableOpacity>
     
             {editMode ? (
                 <>
-                    <TextInput
-                        style={styles.input}
-                        value={tempName}
-                        onChangeText={setTempName}
-                        placeholder="Name"
-                    />
-                    <TextInput
-                        style={styles.input}
-                        value={tempEmail}
-                        onChangeText={setTempEmail}
-                        placeholder="Email"
-                    />
                     <TouchableOpacity onPress={handleSave} style={styles.button}>
-                        <Text>Save</Text>
+                        <Text style={styles.edit}>Save</Text>
                     </TouchableOpacity>
+                    <View style={styles.group}>
+                        <TextInput
+                            style={styles.input}
+                            value={tempName}
+                            onChangeText={setTempName}
+                            placeholder="Name"
+                            placeholderTextColor="#bba1d2"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            value={tempEmail}
+                            onChangeText={setTempEmail}
+                            placeholder="Email"
+                            placeholderTextColor="#bba1d2"
+                        />
+                    </View>
                 </>
             ) : (
-                <>
+                <View style={styles.group}>
                     <Text style={styles.header}>{userInfo.name}</Text>
                     <TouchableOpacity onPress={handleSelectProfilePic}>
                         <Image
@@ -141,12 +149,12 @@ const ProfileScreen = () => {
                             style={styles.profilePic}
                         />
                     </TouchableOpacity>
-                    <Text style={styles.email}>Email: {userInfo.email}</Text>
+                    <Text style={styles.email}>email: {userInfo.email}</Text>
                     <Text style={styles.info}>Items Bought:</Text>
                     {renderItem(itemsBought)}
                     <Text style={styles.info}>Items Sold:</Text>
                     {renderItem(itemsSold)}
-                </>
+                </View>
             )}
         </View>
     );
@@ -158,43 +166,70 @@ const styles = StyleSheet.create({
         justifyContent: 'top',
         alignItems: 'center',
         padding: 20,
+        backgroundColor: "#efeaff"
     },
     input: {
         width: '80%',
         padding: 10,
         marginVertical: 5,
         borderWidth: 1,
-        borderColor: 'gray',
+        borderColor: '#2c0e69',
         borderRadius: 5,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
     button: {
-        backgroundColor: '#007bff',
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#2c0e69',
         padding: 10,
         margin: 10,
         borderRadius: 5,
+        color: '#efeaff'
     },
     profilePic: {
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 150,
         borderRadius: 50,
         marginVertical: 0.2,
     },
     header: {
         fontSize: 40,
-        marginBottom: 20,
+        marginBottom: 5,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
     email: {
         fontSize: 15,
-        marginVertical: 20,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
     info: {
         fontSize: 18,
         marginVertical: 10,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
     itemContainer: {
         fontSize: 15,
         marginVertical: 2,
-    }
+        fontFamily: 'AvenirNext-Bold',
+        color: "#bba1d2"
+    },
+    edit: {
+        fontFamily: 'AvenirNext-Bold',
+        fontSize: 15,
+        color: '#efeaff',
+        alignItems: 'flex-end'
+    },
+    group: {
+        alignItems: 'center',
+        height: 800,
+        width: 300,
+        position: 'absolute',
+        top: '20%',
+    },
 });
 
 export default ProfileScreen;

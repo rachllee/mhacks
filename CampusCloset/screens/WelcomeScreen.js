@@ -1,6 +1,17 @@
 import React from 'react'; 
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+
+const CustomButton = ({ title, onPress, color }) => {
+    return (
+        <TouchableOpacity 
+            onPress={onPress} 
+            style={[styles.button, { backgroundColor: color }]}
+        >
+            <Text style={styles.buttonText}>{title}</Text>
+        </TouchableOpacity>
+    );
+};
 
 const WelcomeScreen = ({ navigation }) => {
     return (
@@ -13,17 +24,17 @@ const WelcomeScreen = ({ navigation }) => {
                 <Text style={styles.title}>Welcome to CampusCloset!</Text>
                 <Text style={styles.tagline}>Style on a Budget, Right on Campus</Text>
                 <View style={styles.buttonContainer}>
-                    <Button 
-                        title="Create Account" 
-                        onPress={() => navigation.navigate('SignupScreen')} 
-                        color="#5c6bc0"
-                    />
-                    <View style={styles.buttonSpacing}></View>
-                    <Button 
-                        title="Log In" 
-                        onPress={() => navigation.navigate('LoginScreen')} 
-                        color="#5c6bc0"
-                    />
+                    <CustomButton 
+                    title="Create Account" 
+                    onPress={() => navigation.navigate('SignupScreen')}
+                    color="#2c0e69"
+                />
+                <View style={styles.buttonSpacing}></View>
+                <CustomButton 
+                    title="Log In" 
+                    onPress={() => navigation.navigate('LoginScreen')}
+                    color="#2c0e69"
+                />
                 </View>
             </View>
             <StatusBar style="auto" />
@@ -36,16 +47,19 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#efeaff',
     },
     title: {
-        fontSize: 24,
+        color: '#2c0e69',
+        fontFamily: 'AvenirNext-Bold',
+        fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 8,
     },
     tagline: {
+        fontFamily: 'AvenirNext-Bold',
         fontSize: 16,
-        color: '#616161',
+        color: '#b098ed',
         marginBottom: 20,
         textAlign: 'center',
         paddingHorizontal: 20,
@@ -57,8 +71,21 @@ const styles = StyleSheet.create({
         marginVertical: 0.2,
     },
     buttonContainer: {
+        fontFamily: 'AvenirNext-Bold',
         width: '80%',
         justifyContent: 'center',
+    },
+    button: {
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%'
+    },
+    buttonText: {
+        color: '#efeaff',
+        fontSize: 16,
+        fontFamily: 'AvenirNext-Bold', 
     },
     buttonSpacing: {
         height: 10
