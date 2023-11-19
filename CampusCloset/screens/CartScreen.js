@@ -31,7 +31,7 @@ const CartScreen = () => {
     };
 
     const getTotalPrice = () => {
-        return cartItems.reduce((sum, item) => sum + (item.price), 0);
+        return cartItems.reduce((sum, item) => sum + parseFloat(item.price), 0);
     };
 
     const renderItem = ({ item }) => (
