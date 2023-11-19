@@ -97,6 +97,7 @@ const ProfileScreen = () => {
             <TouchableOpacity onPress={handleSelectProfilePic}>
                 <Image
                     source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/default-profile-pic.jpeg')} 
+
                     style={styles.profilePic}
                 />
             </TouchableOpacity>
