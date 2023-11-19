@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     tagline: {
         fontFamily: 'AvenirNext-Bold',
         fontSize: 16,
-        color: '#b098ed',
+        color: '#bba1d2',
         marginBottom: 20,
         textAlign: 'center',
         paddingHorizontal: 20,
