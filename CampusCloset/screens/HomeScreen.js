@@ -4,6 +4,17 @@ import RNPickerSelect from 'react-native-picker-select';
 import { addDoc, collection } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 
+const CustomButton = ({ title, onPress, color }) => {
+    return (
+        <TouchableOpacity 
+            onPress={onPress} 
+            style={[styles.button, { backgroundColor: color }]}
+        >
+            <Text style={styles.buttonText}>{title}</Text>
+        </TouchableOpacity>
+    );
+};
+
 const HomeScreen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [filters, setFilters] = useState({
@@ -67,7 +78,7 @@ const HomeScreen = () => {
         <TouchableOpacity onPress={() => handleImagePress(item)}>
             <View style={styles.imageContainer}>
                 <Image source={item.image} style={styles.image} />
-                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.caption}>{item.name}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -78,6 +89,7 @@ const HomeScreen = () => {
                 {/* University Filter */}
                 <RNPickerSelect
                     placeholder={{ label: 'Select University', value: null }}
+                    placeholderTextColor="bba1d2"
                     onValueChange={(value) => setFilters({ ...filters, university: value })}
                     items={[
                         { label: 'Michigan Wolverines', value: 'Michigan Wolverines' },
@@ -87,6 +99,12 @@ const HomeScreen = () => {
                         { label: 'Georgia Bulldogs', value: 'Georgia Bulldogs' },
                         { label: 'Rutgers', value: 'Rutgers' },
                     ]}
+                    style={{
+                        inputIOS: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For iOS
+                        inputAndroid: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For Android
+                        placeholder: { color: '#bba1d2', fontFamily: 'AvenirNext-Bold' }, // Placeholder color
+                    }}
+                    
                 />
 
                 {/* Type Filter */}
@@ -98,6 +116,11 @@ const HomeScreen = () => {
                         { label: 'Bottoms', value: 'Bottoms' },
                         // Add more types as needed
                     ]}
+                    style={{
+                        inputIOS: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For iOS
+                        inputAndroid: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For Android
+                        placeholder: { color: '#bba1d2', fontFamily: 'AvenirNext-Bold' }, // Placeholder color
+                    }}
                 />
 
                 {/* Size Filter */}
@@ -111,6 +134,11 @@ const HomeScreen = () => {
                         { label: 'L', value: 'L' },
                         // Add more sizes as needed
                     ]}
+                    style={{
+                        inputIOS: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For iOS
+                        inputAndroid: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For Android
+                        placeholder: { color: '#bba1d2', fontFamily: 'AvenirNext-Bold' }, // Placeholder color
+                    }}
                 />
         </View>
             <FlatList
@@ -131,13 +159,15 @@ const HomeScreen = () => {
                     <Image source={selectedImage?.image} style={styles.modalImage} />
                     <Text style={styles.modalName}>{selectedImage?.name}</Text>
                     <Text style={styles.modalPrice}>${selectedImage?.price}</Text>
-                    <Text style={styles.modaluniversity}>{selectedImage?.university}</Text>
-                    <Text style={styles.modaltype}>{selectedImage?.type}</Text>
-                    <Text style={styles.modaldate}>{selectedImage?.date}</Text>
-                    <Text style={styles.modalsize}>{selectedImage?.size}</Text>
-                    <Text style={styles.modaldescription}>{selectedImage?.description}</Text>
-                    <Button title="Add to Cart" onPress={() => addToCart(selectedImage)} />
-                    <Button title="Close" onPress={closeModal} />
+                    <Text style={styles.modalUniversity}>{selectedImage?.university}</Text>
+                    <Text style={styles.modalType}>{selectedImage?.type}</Text>
+                    <Text style={styles.modalDate}>{selectedImage?.date}</Text>
+                    <Text style={styles.modalSize}>{selectedImage?.size}</Text>
+                    <Text style={styles.modalDescription}>{selectedImage?.description}</Text>
+                    <View style={styles.buttonSpacing}></View>
+                    <CustomButton title="Add to Cart" onPress={() => addToCart(selectedImage)} color="#2c0e69"/>
+                    <View style={styles.buttonSpacing}></View>
+                    <CustomButton title="Close" onPress={closeModal} color="#2c0e69"/>
                     </View>
                 </View>
             </Modal>
@@ -153,6 +183,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        backgroundColor: '#efeaff'
     },
     imageContainer: {
         flex: 1,
@@ -167,8 +198,11 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     caption: {
-        fontSize: 16,
+        fontSize: 13,
         marginTop: 8,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69',
+        alignContent: 'center'
     },
     modalContainer: {
         flex: 1,
@@ -176,7 +210,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContent: {
-        backgroundColor: 'white', // Background color for the content inside the modal
+        backgroundColor: '#bba1d2', // Background color for the content inside the modal
         borderRadius: 8,
         padding: 20,
         alignItems: 'center',
@@ -188,14 +222,67 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 10,
     },
-    modalCaption: {
-        fontSize: 18,
-        marginBottom: 10,
+    modalName: {
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
+    },
+    modalPrice: {
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
+    },
+    modalUniversity: {
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
+    },
+    modalType: {
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
+    },
+    modalSize: {
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
+    },
+    modalDate: {
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
     modalDescription: {
-        fontSize: 16,
+        fontSize: 14,
         textAlign: 'center',
-        marginBottom: 20,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
+    },
+    buttonContainer: {
+        fontFamily: 'AvenirNext-Bold',
+        width: '80%',
+        justifyContent: 'center',
+    },
+    button: {
+        padding: 8,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%'
+    },
+    buttonText: {
+        color: '#efeaff',
+        fontSize: 14,
+        fontFamily: 'AvenirNext-Bold', 
+    },
+    buttonSpacing: {
+        height: 10
     },
 });
 
