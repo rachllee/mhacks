@@ -3,6 +3,28 @@ import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native
 import { auth, db } from '../firebaseConfig';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
+const CustomButton = ({ title, onPress, color }) => {
+    return (
+        <TouchableOpacity 
+            onPress={onPress} 
+            style={[styles.button, { backgroundColor: color }]}
+        >
+            <Text style={styles.buttonText}>{title}</Text>
+        </TouchableOpacity>
+    );
+};
+
+const CustomButton2 = ({ title, onPress, color }) => {
+    return (
+        <TouchableOpacity 
+            onPress={onPress} 
+            style={[styles.removeItemButton]}
+        >
+            <Text style={styles.removeItemButton}>{title}</Text>
+        </TouchableOpacity>
+    );
+};
+
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);
 
@@ -31,16 +53,18 @@ const CartScreen = () => {
     };
 
     const getTotalPrice = () => {
-        return cartItems.reduce((sum, item) => sum + (item.price), 0);
+        return cartItems.reduce((sum, item) => sum + parseFloat(item.price), 0);
     };
 
     const renderItem = ({ item }) => (
         <View style={styles.itemContainer}>
             <Text style={styles.itemName}>{item.name}</Text>
             <Text style={styles.itemPrice}>${item.price}</Text>
-            <TouchableOpacity onPress={() => handleRemoveItem(item.id)}>
-                <Text style={styles.removeItemButton}>Remove</Text>
-            </TouchableOpacity>
+            <CustomButton 
+                    title="Remove" 
+                    onPress={handleRemoveItem(item.id)}
+                    color="#2c0e69"
+                />
         </View>
     );
 
@@ -54,9 +78,11 @@ const CartScreen = () => {
                     <Text style={styles.totalPrice}>Total: ${getTotalPrice()}</Text>
                 )}
             />
-            <TouchableOpacity style={styles.checkoutButton}>
-                <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
-            </TouchableOpacity>
+            <CustomButton 
+                    title="Proceed to Checkout" 
+                    //onPress={handleCreateAccount}
+                    color="#2c0e69"
+                />
         </View>
     );
 };
@@ -65,6 +91,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        backgroundColor: '#efeaff'
     },
     itemContainer: {
         flexDirection: 'row',
@@ -76,28 +103,45 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontSize: 16,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
     itemPrice: {
         fontSize: 16,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
     removeItemButton: {
         fontSize: 16,
         color: 'red',
+        width: '40%'
     },
     totalPrice: {
         fontSize: 20,
         textAlign: 'right',
         marginVertical: 20,
+        fontFamily: 'AvenirNext-Bold',
+        color: '#2c0e69'
     },
-    checkoutButton: {
-        backgroundColor: '#007bff',
-        padding: 15,
-        alignItems: 'center',
+    buttonContainer: {
+        fontFamily: 'AvenirNext-Bold',
+        width: '80%',
+        justifyContent: 'center',
+    },
+    button: {
+        padding: 8,
         borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%'
     },
-    checkoutButtonText: {
-        color: 'white',
-        fontSize: 18,
+    buttonText: {
+        color: '#efeaff',
+        fontSize: 14,
+        fontFamily: 'AvenirNext-Bold', 
+    },
+    buttonSpacing: {
+        height: 10
     },
 });
 

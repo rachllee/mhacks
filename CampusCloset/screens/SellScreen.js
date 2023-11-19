@@ -6,6 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { db, auth } from '../firebaseConfig';
 import { arrayUnion, doc, collection, addDoc, updateDoc } from "firebase/firestore";
 
+const CustomButton = ({ title, onPress, color }) => {
+  return (
+      <TouchableOpacity 
+          onPress={onPress} 
+          style={[styles.button, { backgroundColor: color }]}
+      >
+          <Text style={styles.buttonText}>{title}</Text>
+      </TouchableOpacity>
+  );
+};
+
 const generateUniqueId = () => {
   return uuidv4();
 };
@@ -93,19 +104,20 @@ const SellScreen = ({ navigation }) => {
     <TouchableOpacity onPress={pickImage}>
       <View style={styles.square}>
         {image && <Image source={{ uri: image }} style={styles.square} />}
-        {!image && <Text>Select Image</Text>}
+        {!image && <Text style={styles.info}>Select Image</Text>}
       </View>
     </TouchableOpacity>
 
       <View style={styles.textFieldsContainer}>
-        <Text>Name:</Text>
+        <Text style={styles.info}>Name:</Text>
         <TextInput
           style={styles.textField}
           value={name}
           onChangeText={(text) => setName(text)}
+          placeholderTextColor="#bba1d2"
         />
 
-        <Text>Tags:</Text>
+        <Text style={styles.info}>Tags:</Text>
         <TextInput
           style={styles.textField}
           value={tagInput}
@@ -127,7 +139,7 @@ const SellScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.descriptionContainer}>
-        <Text>Price:</Text>
+        <Text style={styles.info}>Price:</Text>
         <TextInput
           style={styles.textField}
           value={price}
@@ -135,7 +147,7 @@ const SellScreen = ({ navigation }) => {
           keyboardType='numeric'
         />
 
-        <Text>University:</Text>
+        <Text style={styles.info}>University:</Text>
         <TextInput
           style={styles.textField}
           value={university}
@@ -154,22 +166,25 @@ const SellScreen = ({ navigation }) => {
             ))}
         </View>
         
-        <Text>Used:</Text>
+        <Text style={styles.info}>Used:</Text>
         <Switch
           value={used}
           onValueChange={(value) => setUsed(value)}
+          trackColor={{ false: "#bba1d2", true: "#2c0e69" }} // Dark purple when on
+          thumbColor={used ? "#efeaff" : "#efeaff"}
         />
 
-        <Text>Description:</Text>
+        <Text style={styles.info}>Description:</Text>
         <TextInput
           style={[styles.textField, { height: 100 }]}
           value={description}
           onChangeText={(text) => setDescription(text)}
           multiline
+          
         />
       </View>
 
-      <Button title="List Item" onPress={handleSellItem} />
+      <CustomButton title="List Item" onPress={handleSellItem} color="#2c0e69"/>
     </View>
 
     </ScrollView>
@@ -180,37 +195,43 @@ const SellScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: '#efeaff'
   },
   square: {
     width: 110,
     height: 110,
     top: 15,
     left: 0,
-    backgroundColor: 'lightgray',
+    backgroundColor: '#b098ed',
     marginLeft: 0,
     position: 'absolute',
     justifyContent: 'center',
+    alignItems: 'center',
+    fontFamily: 'AvenirNext-Bold'
   },
   textFieldsContainer: {
     marginLeft: 130, // Adjust the margin as needed
     marginBottom: 20,
     padding: 5,
+    fontFamily: 'AvenirNext-Bold'
   },
   descriptionContainer: {
     marginTop: 15,
   },
   textField: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#2c0e69',
+    color: '#2c0369',
     borderWidth: 1,
     marginBottom: 10,
+    fontFamily: 'AvenirNext-Bold'
   },
   tagsContainer: {
     flexDirection: 'row', 
     flexWrap: 'wrap',
     marginTop: 10, 
     borderWidth: 1,
-    borderColor: 'lightgray',
+    borderColor: '#efeaff',
     padding: 5,
     borderRadius: 10,
   },
@@ -220,11 +241,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   tag: {
-    backgroundColor: '#D5BEF3',
+    backgroundColor: '#2c0e69',
     borderRadius: 10,
     paddingVertical: 5,
     paddingHorizontal: 10,
     margin: 5,
+    fontFamily: 'AvenirNext-Bold'
   },
   optionsContainer: {
     flexDirection: 'row',
@@ -234,14 +256,15 @@ const styles = StyleSheet.create({
   option: {
     padding: 10,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#2c0e69',
     borderRadius: 5,
   },
   selectedOption: {
-    backgroundColor: '#blue',
+    backgroundColor: '#2c0e69',
   },
   optionText: {
     fontSize: 16,
+    fontFamily: 'AvenirNext-Bold'
   },
   image: {
     width: 110,
@@ -255,18 +278,45 @@ const styles = StyleSheet.create({
   sizeOption: {
     padding: 10,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#2c0e69',
     borderRadius: 5,
     marginHorizontal: 5,
   },
   selectedSizeOption: {
-    backgroundColor: '#007bff',
-    borderColor: '#007bff',
+    backgroundColor: '#b098ed',
+    borderColor: '#2c0e69',
   },
   sizeText: {
-    color: 'black',
+    color: '#2c0e69',
     fontSize: 16,
+    fontFamily: 'AvenirNext-Bold'
   },
+  buttonContainer: {
+    fontFamily: 'AvenirNext-Bold',
+    width: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+},
+button: {
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%'
+},
+buttonText: {
+    color: '#efeaff',
+    fontSize: 16,
+    fontFamily: 'AvenirNext-Bold', 
+},
+buttonSpacing: {
+    height: 10
+},
+info: {
+    fontFamily: 'AvenirNext-Bold',
+    color: '#2c0e69',
+    fontSize: 14
+}
 });
 
 export default SellScreen;
