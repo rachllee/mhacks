@@ -1,24 +1,30 @@
 import React from 'react'; 
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 const WelcomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Welcome to CampusCloset!</Text>
-            <Text style={styles.tagline}>Style on a Budget, Right on Campus</Text>
-            <View style={styles.buttonContainer}>
-                <Button 
-                    title="Create Account" 
-                    onPress={() => navigation.navigate('SignupScreen')} 
-                    color="#5c6bc0"
+            <View style={styles.group}>
+                <Image
+                    source={require('../assets/logo.png')} 
+                    style={styles.profilePic}
                 />
-                <View style={styles.buttonSpacing}></View>
-                <Button 
-                    title="Log In" 
-                    onPress={() => navigation.navigate('LoginScreen')} 
-                    color="#5c6bc0"
-                />
+                <Text style={styles.title}>Welcome to CampusCloset!</Text>
+                <Text style={styles.tagline}>Style on a Budget, Right on Campus</Text>
+                <View style={styles.buttonContainer}>
+                    <Button 
+                        title="Create Account" 
+                        onPress={() => navigation.navigate('SignupScreen')} 
+                        color="#5c6bc0"
+                    />
+                    <View style={styles.buttonSpacing}></View>
+                    <Button 
+                        title="Log In" 
+                        onPress={() => navigation.navigate('LoginScreen')} 
+                        color="#5c6bc0"
+                    />
+                </View>
             </View>
             <StatusBar style="auto" />
         </View>
@@ -44,12 +50,25 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingHorizontal: 20,
     },
+    profilePic: {
+        width: 400,
+        height: 150,
+        borderRadius: 50,
+        marginVertical: 0.2,
+    },
     buttonContainer: {
         width: '80%',
         justifyContent: 'center',
     },
     buttonSpacing: {
         height: 10
+    },
+    group: {
+        alignItems: 'center',
+        height: 60,
+        width: 400,
+        position: 'absolute',
+        top: '15%',
     },
 });
     

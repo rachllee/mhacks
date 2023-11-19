@@ -40,29 +40,31 @@ const LoginScreen = ({ setIsLoggedIn }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Returning User</Text>
-            
-            <TextInput
-                style={styles.input}
-                onChangeText={handleEmailChange}
-                value={email}
-                placeholder="Email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
+            <View style={styles.group}>
+                <Text style={styles.header}>Returning User</Text>
+                
+                <TextInput
+                    style={styles.input}
+                    onChangeText={handleEmailChange}
+                    value={email}
+                    placeholder="Email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
 
-            <TextInput
-                style={styles.input}
-                onChangeText={handlePasswordChange}
-                value={password}
-                placeholder="Password"
-                secureTextEntry
-            />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={handlePasswordChange}
+                    value={password}
+                    placeholder="Password"
+                    secureTextEntry
+                />
 
-            <Button 
-                title="Sign In" 
-                onPress={handleLogin} 
-            />
+                <Button 
+                    title="Sign In" 
+                    onPress={handleLogin} 
+                />
+            </View>
         </View>
     );
 };
@@ -86,6 +88,13 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
     },
+    group: {
+        alignItems: 'center',
+        height: 60,
+        width: 300,
+        position: 'absolute',
+        top: '20%',
+    }
 });
 
 export default LoginScreen;
