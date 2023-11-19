@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, FlatList, Modal, Button} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import { doc, getDoc, updateDoc, getDocs, collection } from "firebase/firestore";
+import { doc, getDoc, updateDoc, getDocs, collection, addDoc } from "firebase/firestore";
 import { auth, db, storage } from '../firebaseConfig';
 import { useFocusEffect } from '@react-navigation/native';
 
