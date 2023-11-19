@@ -1,8 +1,19 @@
 import React, { useState } from 'react'; 
-import { StyleSheet, Text, View, Button, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { db, auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+
+const CustomButton = ({ title, onPress, color }) => {
+    return (
+        <TouchableOpacity 
+            onPress={onPress} 
+            style={[styles.button, { backgroundColor: color }]}
+        >
+            <Text style={styles.buttonText}>{title}</Text>
+        </TouchableOpacity>
+    );
+};
 
 const LoginScreen = ({ setIsLoggedIn }) => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -50,6 +61,7 @@ const LoginScreen = ({ setIsLoggedIn }) => {
                     placeholder="Email"
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    placeholderTextColor="#bba1d2"
                 />
 
                 <TextInput
@@ -58,12 +70,17 @@ const LoginScreen = ({ setIsLoggedIn }) => {
                     value={password}
                     placeholder="Password"
                     secureTextEntry
+                    placeholderTextColor="#bba1d2"
                 />
-
-                <Button 
-                    title="Sign In" 
-                    onPress={handleLogin} 
-                />
+                <View style={styles.buttonSpacing}></View>
+                <View style={styles.buttonContainer}>
+                    <CustomButton 
+                        title="Log In" 
+                        onPress={handleLogin} 
+                        color="#2c0e69"
+                    />
+                </View>
+                
             </View>
         </View>
     );
@@ -75,12 +92,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        backgroundColor: '#efeaff',
     },
     header: {
+        color: '#2c0e69',
+        fontFamily: 'AvenirNext-Bold',
         fontSize: 24,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     input: {
+        color: '#2c0e69',
+        fontFamily: 'AvenirNext-Bold',
         height: 40,
         width: '100%',
         marginVertical: 10,
@@ -94,7 +116,28 @@ const styles = StyleSheet.create({
         width: 300,
         position: 'absolute',
         top: '20%',
-    }
+    },
+    buttonContainer: {
+        fontFamily: 'AvenirNext-Bold',
+        width: '80%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    button: {
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '125%'
+    },
+    buttonText: {
+        color: '#efeaff',
+        fontSize: 16,
+        fontFamily: 'AvenirNext-Bold', 
+    },
+    buttonSpacing: {
+        height: 10
+    },
 });
 
 export default LoginScreen;
