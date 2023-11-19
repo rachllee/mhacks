@@ -10,9 +10,11 @@ const HomeScreen = ({ navigation }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [firebaseData, setFirebaseData] = useState([]);
 
+
     const fetchDataFromFirebase = async () => {
     // Assuming you have a 'items' collection in your Firebase database
         const itemsCollection = collection(db, 'items');
+
 
         try {
             const querySnapshot = await getDocs(itemsCollection);
@@ -49,6 +51,7 @@ const HomeScreen = ({ navigation }) => {
 
     const renderItem = (item) => (
         <View key={item.id} style={styles.itemContainer}>
+
         <Text>Name: {item.name}</Text>
         <Text>Description: {item.description}</Text>
         <Text>Price: ${item.price}</Text>
@@ -62,20 +65,28 @@ const HomeScreen = ({ navigation }) => {
             />
         )}
 
+
         </View>
     );
+    
 
 
     return (
 
+
     <View style={styles.container}>
         <FlatList
+
             data={firebaseData}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => renderItem(item)} // Pass each item to renderItem
             numColumns={2}
+
         />
     </View>
+
+        </View>
+
     );
 };
 
