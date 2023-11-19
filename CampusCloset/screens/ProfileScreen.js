@@ -5,24 +5,17 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-const itemsMockBought = [
-    { id: '1', name: 'Tailgate T-Shirt', price: 20, quantity: 1 },
-    { id: '2', name: 'Vintage College Cap', price: 15, quantity: 1 },
-];
-
-const itemsMockSold = [
-    { id: '1', name: 'Tailgate T-Shirt', price: 20, quantity: 1 },
-    { id: '2', name: 'Vintage College Cap', price: 15, quantity: 1 },
-];
-
 const ProfileScreen = () => {
     const [userInfo, setUserInfo] = useState({
-        name: 'Netra',
-        email: 'netraj@netraj.edu',
+        name: '',
+        email: '',
         profilePic: ''
     });
-    const [itemsBought] = useState(itemsMockBought);
-    const [itemsSold] = useState(itemsMockSold);
+    const [itemsBought, setItemsBought] = useState([]);
+    const [itemsSold, setItemsSold] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const [tempName, setTempName] = useState('');
+    const [tempEmail, setTempEmail] = useState('');
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -32,10 +25,12 @@ const ProfileScreen = () => {
                     const data = userDoc.data();
                     setUserInfo(prevState => ({
                         ...prevState,
-                        name: userInfo.name,
-                        email: userInfo.email,
-                        profilePic: userInfo.profilePic || '',
+                        name: data.name,
+                        email: data.email,
+                        profilePic: data.profilePic || '',
                     }));
+                    setItemsBought(data.itemsBought || []);
+                    setItemsSold(data.itemsSold || []);
                 } else {
                     console.log("No such document!");
                 }
@@ -46,6 +41,25 @@ const ProfileScreen = () => {
 
         getUserInfo();
     }, []);
+
+    const handleEdit = () => {
+        setTempName(userInfo.name);
+        setTempEmail(userInfo.email);
+        setEditMode(true);
+    };
+
+    const handleSave = async () => {
+        try {
+            await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                name: tempName,
+                email: tempEmail
+            });
+            setUserInfo({ ...userInfo, name: tempName, email: tempEmail });
+            setEditMode(false);
+        } catch (error) {
+            console.error("Error updating user info:", error);
+        }
+    };
     
     const renderItem = (items) => {
         return items.map(item => (
@@ -85,11 +99,13 @@ const ProfileScreen = () => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={handleEdit} style={styles.button}>
+                <Text>Edit</Text>
+            </TouchableOpacity>
             <Text style={styles.header}>{userInfo.name}</Text>
             <TouchableOpacity onPress={handleSelectProfilePic}>
                 <Image
                     source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/default-profile-pic.png')} 
-
                     style={styles.profilePic}
                 />
             </TouchableOpacity>
@@ -108,6 +124,20 @@ const styles = StyleSheet.create({
         justifyContent: 'top',
         alignItems: 'center',
         padding: 20,
+    },
+    input: {
+        width: '80%',
+        padding: 10,
+        marginVertical: 5,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+    },
+    button: {
+        backgroundColor: '#007bff',
+        padding: 10,
+        margin: 10,
+        borderRadius: 5,
     },
     profilePic: {
         width: 100,
