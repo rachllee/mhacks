@@ -133,7 +133,7 @@ const SellScreen = ({ navigation }) => {
             style={styles.tag}
             onPress={() => removeTag(tag)}
             >
-                <Text>{tag}</Text>
+                <Text style={styles.tagsText}>{tag}</Text>
             </TouchableOpacity>
         ))}
       </View>
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     height: 110,
     top: 15,
     left: 0,
-    backgroundColor: '#b098ed',
+    backgroundColor: '#bba1d2',
     marginLeft: 0,
     position: 'absolute',
     justifyContent: 'center',
@@ -226,27 +226,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: 'AvenirNext-Bold'
   },
+  tagsText: {
+    fontFamily: 'AvenirNext-Bold',
+    color: '#2c0e69',
+  },
   tagsContainer: {
     flexDirection: 'row', 
     flexWrap: 'wrap',
-    marginTop: 10, 
-    borderWidth: 1,
-    borderColor: '#efeaff',
     padding: 5,
-    borderRadius: 10,
-  },
+},
   tagsWrapper: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 5,
   },
   tag: {
-    backgroundColor: '#2c0e69',
-    borderRadius: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    margin: 5,
-    fontFamily: 'AvenirNext-Bold'
+      borderRadius: 10,
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      backgroundColor: '#bba1d2',
+      margin: 5,
+      fontFamily: 'AvenirNext-Bold',
+      color: "#bba1d2",
+      borderWidth: 1, // Add border width
+      borderColor: '#2c0e69', // Add border color
   },
   optionsContainer: {
     flexDirection: 'row',
@@ -283,7 +286,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   selectedSizeOption: {
-    backgroundColor: '#b098ed',
+    backgroundColor: '#bba1d2',
     borderColor: '#2c0e69',
   },
   sizeText: {
