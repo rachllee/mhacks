@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image, FlatList, Modal, Button} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import { addDoc, collection } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig';
+import { doc, getDoc, updateDoc, getDocs, collection } from "firebase/firestore";
+import { auth, db, storage } from '../firebaseConfig';
 import { useFocusEffect } from '@react-navigation/native';
 
 const CustomButton = ({ title, onPress, color }) => {
@@ -15,9 +15,7 @@ const CustomButton = ({ title, onPress, color }) => {
         </TouchableOpacity>
     );
 };
-import { doc, getDoc, updateDoc, getDocs, collection } from "firebase/firestore";
-import { auth, db, storage } from '../firebaseConfig';
-import { useFocusEffect } from '@react-navigation/native';
+
 
 const HomeScreen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -61,7 +59,7 @@ const HomeScreen = () => {
     const dynamicDataFromDatabase = dynamicData.map(item => ({
         id: item.id,
         image: defaultImage,
-        caption: item.name,
+        name: item.name,
         price: item.price,
         university: item.university,
         type: item.tags[0],

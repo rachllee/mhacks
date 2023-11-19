@@ -57,6 +57,17 @@ const SellScreen = ({ navigation }) => {
           itemsListed: arrayUnion(newItem.id)
         });
         navigation.navigate('HomeScreen');
+
+        setName('');
+            setTags([]);
+            setTagInput('');
+            setImage(null);
+            setPrice(0);
+            setUniversity('');
+            setSelectedSize('');
+            setUsed('');
+            setDescription('');
+            
     } else {
       console.error("Error adding item");
     }
@@ -246,7 +257,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     margin: 5,
-    fontFamily: 'AvenirNext-Bold'
+    fontFamily: 'AvenirNext-Bold',
   },
   optionsContainer: {
     flexDirection: 'row',
