@@ -21,8 +21,8 @@ const ProfileScreen = () => {
         email: 'netraj@netraj.edu',
         profilePic: ''
     });
-    const [itemsBought, setItemsBought] = useState(itemsMockBought);
-    const [itemsSold, setItemsSold] = useState(itemsMockSold);
+    const [itemsBought] = useState(itemsMockBought);
+    const [itemsSold] = useState(itemsMockSold);
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -35,14 +35,6 @@ const ProfileScreen = () => {
                         name: userInfo.name,
                         email: userInfo.email,
                         profilePic: userInfo.profilePic || '',
-                    }));
-                    setItemsBought(prevState => ({
-                        ...prevState,
-                        itemsBought: itemsBought
-                    }));
-                    setItemsSold(prevState => ({
-                        ...prevState,
-                        itemsSold: itemsSold
                     }));
                 } else {
                     console.log("No such document!");
@@ -57,9 +49,9 @@ const ProfileScreen = () => {
     
     const renderItem = (items) => {
         return items.map(item => (
-            <View style={styles.itemContainer}>
-                <Text key={item.id} style={styles.itemInfo}>
-                {item.name} ~ Price: ${item.price} ~ Quantity: {item.quantity}
+            <View key={item.id} style={styles.itemContainer}>
+                <Text style={styles.itemInfo}>
+                    {item.name} ~ Price: ${item.price} ~ Quantity: {item.quantity}
                 </Text>
             </View>
         ));
@@ -96,16 +88,16 @@ const ProfileScreen = () => {
             <Text style={styles.header}>{userInfo.name}</Text>
             <TouchableOpacity onPress={handleSelectProfilePic}>
                 <Image
-                    source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/default-profile-pic.jpeg')} 
+                    source={userInfo.profilePic ? { uri: userInfo.profilePic } : require('../assets/default-profile-pic.png')} 
 
                     style={styles.profilePic}
                 />
             </TouchableOpacity>
             <Text style={styles.email}>email: {userInfo.email}</Text>
             <Text style={styles.info}>Items Bought:</Text>
-            <Text style={styles.itemContainer}>{renderItem(itemsBought)}</Text>
+            {renderItem(itemsBought)}
             <Text style={styles.info}>Items Sold:</Text>
-            <Text style={styles.itemContainer}>{renderItem(itemsSold)}</Text>
+            {renderItem(itemsSold)}
         </View>
     );
 };
