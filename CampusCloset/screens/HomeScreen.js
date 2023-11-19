@@ -145,12 +145,9 @@ const HomeScreen = () => {
                         { label: 'Penn State', value: 'Penn State' },
                         { label: 'Georgia Bulldogs', value: 'Georgia Bulldogs' },
                         { label: 'Rutgers', value: 'Rutgers' },
+                        { label: 'University of Pennsylvania', value: 'University of Pennsylvania'},
                     ]}
-                    style={{
-                        inputIOS: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For iOS
-                        inputAndroid: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For Android
-                        placeholder: { color: '#bba1d2', fontFamily: 'AvenirNext-Bold' }, // Placeholder color
-                    }}
+                    style={styles.pickerSelect}
                     
                 />
 
@@ -163,11 +160,8 @@ const HomeScreen = () => {
                         { label: 'Bottoms', value: 'Bottoms' },
                         // Add more types as needed
                     ]}
-                    style={{
-                        inputIOS: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For iOS
-                        inputAndroid: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For Android
-                        placeholder: { color: '#bba1d2', fontFamily: 'AvenirNext-Bold' }, // Placeholder color
-                    }}
+                    style={styles.pickerSelect}
+                    
                 />
 
                 {/* Size Filter */}
@@ -181,11 +175,7 @@ const HomeScreen = () => {
                         { label: 'L', value: 'L' },
                         // Add more sizes as needed
                     ]}
-                    style={{
-                        inputIOS: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For iOS
-                        inputAndroid: { color: '#2c0e69', fontFamily: 'AvenirNext-Bold' }, // For Android
-                        placeholder: { color: '#bba1d2', fontFamily: 'AvenirNext-Bold' }, // Placeholder color
-                    }}
+                    style={styles.pickerSelect}
                 />
         </View>
             <FlatList
@@ -330,6 +320,28 @@ const styles = StyleSheet.create({
     },
     buttonSpacing: {
         height: 10
+    },
+    filterContainer: {
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    pickerSelect: {
+        inputIOS: {
+            color: '#2c0e69',
+            fontFamily: 'AvenirNext-Bold',
+            textAlign: 'center', // Center the text horizontally
+        },
+        inputAndroid: {
+            color: '#2c0e69',
+            fontFamily: 'AvenirNext-Bold',
+            textAlign: 'center', // Center the text horizontally
+        },
+        placeholder: {
+            color: '#bba1d2',
+            fontFamily: 'AvenirNext-Bold',
+            textAlign: 'center', // Center the text horizontally
+        },
     },
 });
 
