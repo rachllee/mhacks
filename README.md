@@ -21,5 +21,5 @@ Pretty frontend and color schemes, a fully functioning and fully integrated data
 Mobile is hard
 
 ## What's next for CampusCloset
-AI feature that automatically tags pictures with their attributes, location filtering to find the closest listings to a user, filtering based on item attribute, and more
+AI feature that automatically tags pictures with their attributes, location filtering to find the closest listings to a user, filtering based on item attribute, and more!
 
